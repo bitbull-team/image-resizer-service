@@ -57,12 +57,26 @@ Parameters:
     - 2944
     - 3008
 Resources:
+  ResizeFunctionImagemagickLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: image-magick
+      Description: Static build of ImageMagick for AWS Linux 2
+      ContentUri: dependencies/
+      CompatibleRuntimes:
+        - nodejs10.x
+        - nodejs12.x
+        - python3.8
+      LicenseInfo: https://imagemagick.org/script/license.php
+      RetentionPolicy: Retain
   ResizeFunction:
     Type: AWS::Serverless::Function
     Properties:
       Description: Image Resizing Lambda
       Handler: index.handler
-      Runtime: nodejs8.10
+      Runtime: nodejs12.x
+      Layers:
+        - arn:aws:lambda:eu-west-1:472473066617:layer:image-magick:1
       Timeout: 60
       CodeUri: dist/bundle.zip
       MemorySize: !Ref MemorySize
